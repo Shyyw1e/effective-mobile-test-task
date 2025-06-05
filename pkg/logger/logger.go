@@ -38,10 +38,24 @@ type colorWriter struct {
 }
 
 func (cw *colorWriter) Write(p []byte) (int, error) {
-	color := colorForLevel(cw.level)
-	colored := fmt.Sprintf("%s%s%s", color, p, reset)
+	s := string(p)
+	color := reset
+
+	switch {
+	case strings.Contains(s, "level=DEBUG"):
+		color = green
+	case strings.Contains(s, "level=INFO"):
+		color = blue
+	case strings.Contains(s, "level=WARN"):
+		color = yellow
+	case strings.Contains(s, "level=ERROR"):
+		color = red
+	}
+
+	colored := fmt.Sprintf("%s%s%s", color, s, reset)
 	return cw.writer.Write([]byte(colored))
 }
+
 
 func New(level slog.Level) *slog.Logger {
 	cw := &colorWriter{
