@@ -1,3 +1,13 @@
+package service
+
+import (
+
+	"github.com/Shyyw1e/effective-mobile-test-task/internal/client"
+	"github.com/Shyyw1e/effective-mobile-test-task/internal/model"
+	"github.com/Shyyw1e/effective-mobile-test-task/internal/repository"
+	"github.com/Shyyw1e/effective-mobile-test-task/pkg/logger"
+)
+
 type EnrichService struct {
 	repo   *repository.PersonRepository
 	client client.Client
