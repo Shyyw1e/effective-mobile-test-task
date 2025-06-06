@@ -16,6 +16,10 @@ type Config struct {
 	Port		string
 }
 
+func (c Config) DSN() string {
+	return "postgresql://" + c.DBUser + ":" + c.DBPassword + "@" + c.DBHost + ":" + c.DBPort + "/" + c.DBName + "?sslmode=disable"
+}
+
 func LoadConfig() Config {
 	err := godotenv.Load()
 	if err != nil {

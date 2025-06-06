@@ -2,6 +2,10 @@ package client
 
 type RealClient struct{}
 
+func NewRealClient() *RealClient {
+	return &RealClient{}
+}
+
 func (r *RealClient) GetAge(name string) (int, error) {
 	return GetAge(name)
 }
