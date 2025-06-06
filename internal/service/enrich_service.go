@@ -1,6 +1,8 @@
 package service
 
 import (
+	"io"
+	"log/slog"
 
 	"github.com/Shyyw1e/effective-mobile-test-task/internal/client"
 	"github.com/Shyyw1e/effective-mobile-test-task/internal/model"
@@ -11,11 +13,16 @@ import (
 type EnrichService struct {
 	repo   *repository.PersonRepository
 	client client.Client
+	logger *slog.Logger
 }
 
-func NewEnrichService(repo *repository.PersonRepository, c client.Client) *EnrichService {
-	return &EnrichService{repo: repo, client: c}
+func NewEnrichService(repo *repository.PersonRepository, c client.Client, logger *slog.Logger) *EnrichService {
+	if logger == nil {
+		logger = slog.New(slog.NewTextHandler(io.Discard, nil)) // дефолтный логгер
+	}
+	return &EnrichService{repo: repo, client: c, logger: logger}
 }
+
 
 func (s *EnrichService) EnrichAndSave(name, surname string, patronymic *string) (*model.Person, error) {
 	age, err := s.client.GetAge(name)
