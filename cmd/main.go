@@ -18,12 +18,13 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
+	_ "github.com/Shyyw1e/effective-mobile-test-task/docs"
+
 
 )
 
 func main() {
+	logger.Log = logger.New(slog.LevelDebug)
 	cfg := config.LoadConfig()
 
 	db, err := gorm.Open(postgres.Open(cfg.DSN()), &gorm.Config{})
@@ -31,21 +32,19 @@ func main() {
 		os.Exit(1)
 	}
 
-	logg := logger.New(slog.LevelDebug)
 
 	personRepo := repository.NewPersonRepository(db)
 	client := client.NewRealClient()
-	enricher := service.NewEnrichService(personRepo, client, logg)
+	enricher := service.NewEnrichService(personRepo, client, logger.Log)
 	h := handler.NewHandler(personRepo, enricher)
 
 	r := h.InitRoutes()
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 
-	logg.Info("server started", "port", cfg.Port)
+	logger.Log.Info("server started", "port", cfg.Port)
 
 	if err := r.Run(":" + cfg.Port); err != nil {
-		logg.Error("failed to start server", "error", err)
+		logger.Log.Error("failed to start server", "error", err)
 		os.Exit(1)
 	}
 }

@@ -7,6 +7,9 @@ import (
 	"github.com/Shyyw1e/effective-mobile-test-task/internal/repository"
 	"github.com/Shyyw1e/effective-mobile-test-task/internal/service"
 	"github.com/gin-gonic/gin"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 type Handler struct {
@@ -31,6 +34,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		api.DELETE("/person/:id", h.deletePerson)
 		api.PUT("/person/:id", h.updatePerson)
 	}
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	return router
 }

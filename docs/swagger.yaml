@@ -1,0 +1,72 @@
+basePath: /api
+definitions:
+  handler.createPersonRequest:
+    properties:
+      name:
+        type: string
+      patronymic:
+        type: string
+      surname:
+        type: string
+    required:
+    - name
+    - surname
+    type: object
+  model.Person:
+    properties:
+      age:
+        type: integer
+      gender:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      nationalities:
+        items:
+          type: string
+        type: array
+      patronymic:
+        type: string
+      surname:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: 'Тестовое задание: API для работы с обогащёнными людьми'
+  title: People API
+  version: "1.0"
+paths:
+  /person:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Информация о человеке
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handler.createPersonRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Person'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Создать нового человека
+swagger: "2.0"
